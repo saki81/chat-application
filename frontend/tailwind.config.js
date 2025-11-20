@@ -1,0 +1,26 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [ "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+   
+    extend: {},
+  },
+  plugins: [require("daisyui")],
+  daisyui: {
+   // themes: [ "light", "dark", "corporate", "lofi", "night","dim"],
+       themes: [
+           "light",
+           "dark",
+           "corporate",
+           "dim",
+           "dracula",
+           "garden",
+           "sunset",
+           "retro"
+
+      ],
+  }
+}
+
+//"light", "dark", "corporate", "lofi", "night","dim"
