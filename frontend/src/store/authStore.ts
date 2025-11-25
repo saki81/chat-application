@@ -2,22 +2,25 @@ import { create } from "zustand";
 import { apiInstance } from "../lib/axios";
 import type { Auth } from "../types";
 import  toast  from "react-hot-toast";
+import { io } from "socket.io-client";
 
+const BASE_URL = "http://localhost:5000";
 
-
-export const authStore = create<Auth>((set) => ({
+export const authStore = create<Auth>((set, get) => ({
     authUser: null,
     isRegister: false,
     isLogin: false,
     isUpdateProfile: false,
     isCheckingAuth: true,
     onlineUsers: [],
+    socket: null,
 
     checkAuth: async () => {
        try {
          const res = await apiInstance.get("/auth/check", {withCredentials: true});
          set({ authUser: res.data});
-
+         
+         get().connectSocket;
        } catch (error) {
          console.log("Error in check auth", error)
        } finally {
@@ -30,6 +33,8 @@ export const authStore = create<Auth>((set) => ({
          const res = await apiInstance.post("/auth/register",data);
          set({ authUser: res.data});
          toast.success("Account created succesfully");
+
+         get().connectSocket();
       } catch (error: any) { 
          toast.error(error.response.data.message)   
       }
@@ -43,18 +48,23 @@ export const authStore = create<Auth>((set) => ({
          const res = await apiInstance.post("/auth/login", data);
          set({ authUser: res.data});
          toast.success("Log in succesfully");
+
+         get().connectSocket();
       } catch (error: any) {
          toast.error(error?.response?.data?.message)
       }
         finally {
          set({ isLogin: false})
         }
+
     },
     logout: async () => {
        try {
           await apiInstance.post("/auth/logout");
           set({ authUser: null})
           toast.success("Logout is succesfully")
+
+          get().disconnectSocket();
        } catch (error: any) {
           toast.error(error.res.data.message)
        }
@@ -86,5 +96,17 @@ export const authStore = create<Auth>((set) => ({
       finally {
          set({ isUpdateProfile: false})
       }
+    },
+
+    connectSocket: () => {
+      const authUser = get();
+       if (!authUser || get().socket?.connected) return;
+
+       const socket = io(BASE_URL)
+       socket.connect();
+       set({ socket: socket })
+    },
+    disconnectSocket: () => {
+       if (get().socket?.connected) get().socket?.disconnect()
     }
 }));

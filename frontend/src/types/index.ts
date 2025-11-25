@@ -1,3 +1,4 @@
+import { Socket } from "socket.io-client";
 
 export interface User {
    _id: string;
@@ -5,6 +6,7 @@ export interface User {
    fullName: string;
    profilePic: string;
    createdAt?:  string;
+   token: string;
 }
 
 export interface RegisterUser {
@@ -35,12 +37,15 @@ export interface Auth {
    isRegister: boolean;
    isLogin: boolean;
    isUpdateProfile: boolean;
+   socket: Socket | null;
    checkAuth: () => Promise<void>;
    register: (data: RegisterUser) => Promise<void>;
    login: (data: LoginUser) => Promise<void>;
    logout: () => Promise<void>;
-   updateProfile: (data: UpdateUser) => Promise<void>
+   updateProfile: (data: UpdateUser) => Promise<void>;
    onlineUsers: OnlineUser[];
+   connectSocket: () => void;
+   disconnectSocket: () => void;
 }
 
 export type Theme = 
