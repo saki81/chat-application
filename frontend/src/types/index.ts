@@ -43,7 +43,7 @@ export interface Auth {
    login: (data: LoginUser) => Promise<void>;
    logout: () => Promise<void>;
    updateProfile: (data: UpdateUser) => Promise<void>;
-   onlineUsers: OnlineUser[];
+   onlineUsers: string[];
    connectSocket: () => void;
    disconnectSocket: () => void;
 }

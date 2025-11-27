@@ -9,18 +9,16 @@ const SidebarUsers = () => {
 
  const { users, selectUser, isUsersLoading,getUsers,setSelectUser} = chatStore();
 
- const { onlineUsers, authUser} = authStore();
+ const { onlineUsers} = authStore();
  const  [showOnlineOnly, setShowOnlineOnly] = useState<boolean>(false) ;
 
   useEffect(() => {
    getUsers()
  }, [getUsers]);
 
-  const filteredUsers = showOnlineOnly
-       ? users.filter((user) => 
-         user._id !== authUser?._id &&
-         onlineUsers.some((onlineUser) => onlineUser.userId === user._id)) 
-       : users.filter((user) => user._id !== authUser?._id);
+    const filteredUsers = showOnlineOnly
+    ? users.filter((user) => onlineUsers.includes(user._id))
+    : users;
 
   const handleOnline = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowOnlineOnly(e.target.checked)
@@ -45,7 +43,7 @@ const SidebarUsers = () => {
               checked={showOnlineOnly}
               onChange={handleOnline}/>
           </label>
-           <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
+           <span className="text-xs text-zinc-500">({onlineUsers.length } online)</span>
          </div>
        </div>
 
@@ -65,17 +63,17 @@ const SidebarUsers = () => {
                 alt={user.fullName}
                 className="size-12 object-cover rounded-full"
               />
-              {onlineUsers.some((u) => u.userId === user._id) && (
-                <span 
+              {onlineUsers.includes(user._id) && (
+                 <span 
                    className="absolute bottom-0 right-0 size-3 bg-green-500 
-                    rounded-full ring-2 ring-zinc-900"/>    
+                    rounded-full ring-2 ring-zinc-900"/>
               )}
               </div>
 
               <div className="text-left min-w-0">
                  <div className="font-medium truncate">{user.fullName}</div>
                  <div className="text-sm text-zinc-400">
-                    {onlineUsers.some((u) => u.userId === user._id) ? "Online" : "Offline"}
+                    {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                  </div>
               </div>
            

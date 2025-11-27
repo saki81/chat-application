@@ -12,13 +12,16 @@ import { Toaster } from "react-hot-toast";
 import { themeStore } from "./store/themeStore";
 
 function App() {
-  const {authUser, checkAuth, isCheckingAuth } = authStore();
-  const { theme} = themeStore()
+  const {authUser, checkAuth, isCheckingAuth, onlineUsers } = authStore();
+  const { theme} = themeStore();
+
+  console.log("Online Users:",onlineUsers)
 
   useEffect(() => {
     checkAuth()
   },[checkAuth])
-
+  
+  
   console.log({ authUser});
 
   if( isCheckingAuth && !authUser) {
