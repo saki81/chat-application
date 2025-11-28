@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import Message from "../models/message.model";
 import cloudinary from "../lib/cloudinary";
+import { io } from "../lib/socket";
+import { getReceiverSocketId } from "../lib/socket";
 
 
 export const getUsersSidebar = async (req: Request, res: Response) => {
@@ -62,6 +64,10 @@ export const sendMessage = async (req: Request, res: Response) => {
       await newMessage.save();
 
       // realtime functionality socket.io
+      const receiverSocketId = getReceiverSocketId(receiverId);
+      if (receiverSocketId) {
+         io.to(receiverSocketId).emit("newMessage", newMessage)
+      }
 
       res.status(201).json(newMessage)
    } catch (error) {

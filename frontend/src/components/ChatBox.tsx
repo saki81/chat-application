@@ -1,14 +1,21 @@
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons-loading/MessageSkeleton";
-import { chatStore } from "../store/chatStore";
+import { chatStore} from "../store/chatStore";
 import { authStore } from "../store/authStore";
 import { useEffect } from "react";
 
 
 const ChatBox = () => {
 
-  const {messages, getMessages, isMessagesLoading, selectUser} = chatStore();
+  const {
+         messages, 
+         getMessages, 
+         isMessagesLoading, 
+         selectUser,
+         subscribeToMessages,
+         unsubscribeMessages } = chatStore();
+
   const { authUser } = authStore();
 
 
@@ -17,9 +24,13 @@ const ChatBox = () => {
       if ( selectUser?._id) {
         //  console.log("Fetching messages for user ID:", selectUser._id); 
          getMessages(selectUser._id );
+
+         subscribeToMessages();
+
+         return () => unsubscribeMessages();
       } 
 
-    },[selectUser, getMessages]);
+    },[selectUser, getMessages,subscribeToMessages, unsubscribeMessages]);
 
 
  if(isMessagesLoading) 

@@ -88,7 +88,9 @@ export interface Chat {
    getUsers: () => Promise<void>;
    getMessages: (userId: string) => Promise<void>;
    setSelectUser: (data: User | null ) => void;
-   sendMessage: (messageData: MessageData ) => Promise<void>
+   sendMessage: (messageData: MessageData ) => Promise<void>;
+   subscribeToMessages: () => void;
+   unsubscribeMessages: () => void;
 }
 
 
