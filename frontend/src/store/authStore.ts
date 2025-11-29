@@ -66,7 +66,8 @@ export const authStore = create<Auth>((set, get) => ({
 
           get().disconnectSocket();
        } catch (error: any) {
-          toast.error(error.res.data.message)
+          toast.error(error.res.data.message);
+          set({ authUser: null})
        }
     },
     updateProfile: async (data: {fullName?: string; profilePic?: string }) => {
@@ -112,7 +113,16 @@ export const authStore = create<Auth>((set, get) => ({
        set({ socket: newSocket });
 
        newSocket.on("getOnlineUsers", (userIds: string[]) => {
-          set({ onlineUsers: userIds})
+          const auth = get().authUser;
+          
+          if (!auth) {
+            set({ onlineUsers: userIds});
+            return;
+          }
+
+          // Remove yourself from the list
+          const filtered = userIds.filter((id) => id !== auth._id);
+          set({ onlineUsers: filtered})
        })
     },
     disconnectSocket: () => {

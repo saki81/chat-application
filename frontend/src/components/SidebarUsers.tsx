@@ -9,7 +9,7 @@ const SidebarUsers = () => {
 
  const { users, selectUser, isUsersLoading,getUsers,setSelectUser} = chatStore();
 
- const { onlineUsers} = authStore();
+ const { onlineUsers, authUser} = authStore();
  const  [showOnlineOnly, setShowOnlineOnly] = useState<boolean>(false) ;
 
   useEffect(() => {
@@ -20,9 +20,9 @@ const SidebarUsers = () => {
     ? users.filter((user) => onlineUsers.includes(user._id))
     : users;
 
-  const handleOnline = (e: React.ChangeEvent<HTMLInputElement>) => {
+ /* const handleOnline = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowOnlineOnly(e.target.checked)
-}
+}*/
 
  if (isUsersLoading) return <SidebarSkeleton/>
 
@@ -41,13 +41,14 @@ const SidebarUsers = () => {
             <input 
               type="checkbox" 
               checked={showOnlineOnly}
-              onChange={handleOnline}/>
+              onChange={(e) => setShowOnlineOnly(e.target.checked)}
+              className="checkbox checkbox-sm" /> 
           </label>
-           <span className="text-xs text-zinc-500">({onlineUsers.length } online)</span>
+           <span className="text-xs text-zinc-500">({onlineUsers.length   } online)</span>
          </div>
        </div>
 
-         {filteredUsers.map((user) => (
+         {filteredUsers.filter(u => u._id !== authUser?._id).map((user) => (
            <button
              key={user._id}
              onClick={()=>setSelectUser(user)}
