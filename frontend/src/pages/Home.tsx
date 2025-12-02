@@ -6,7 +6,8 @@ import SidebarUsers from "../components/SidebarUsers";
 
 const Home = () => {
 
-const {selectUser} = chatStore()
+const {selectUser} = chatStore();
+
 
  return ( 
      <section className="h-screen bg-base-200">

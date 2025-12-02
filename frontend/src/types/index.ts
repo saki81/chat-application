@@ -83,11 +83,13 @@ export interface Chat {
    messages: Message[];
    users: User[];
    selectUser: User | null;
+   sidebarOpen: boolean;
    isUsersLoading: boolean;
    isMessagesLoading: boolean;
    getUsers: () => Promise<void>;
    getMessages: (userId: string) => Promise<void>;
    setSelectUser: (data: User | null ) => void;
+   setSidebarOpen: (value: boolean) => void;
    sendMessage: (messageData: MessageData ) => Promise<void>;
    subscribeToMessages: () => void;
    unsubscribeMessages: () => void;

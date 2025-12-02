@@ -5,7 +5,7 @@ import { chatStore } from "../store/chatStore";
 
 const ChatHeader = () => {
 
-  const { selectUser, setSelectUser} = chatStore();
+  const { selectUser, setSelectUser } = chatStore();
   const { onlineUsers} = authStore()
 
  return ( 
@@ -29,7 +29,6 @@ const ChatHeader = () => {
               </p>
            </div>
          </div>
-
          {/* close */}
           <button onClick={() => setSelectUser(null)}>
            <X/>

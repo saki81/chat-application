@@ -9,6 +9,7 @@ export const chatStore = create<Chat>((set, get) => ({
     messages: [],
     users: [],
     selectUser: null,
+    sidebarOpen: true,
     isUsersLoading: false,
     isMessagesLoading: false,
 
@@ -45,7 +46,7 @@ export const chatStore = create<Chat>((set, get) => ({
         toast.error(error.response.data.message)
      }
    },
-
+   
    subscribeToMessages: () => {
      const { selectUser } = get();
      if (!selectUser) return;
@@ -64,4 +65,5 @@ export const chatStore = create<Chat>((set, get) => ({
    },
 
    setSelectUser: (selectUser) => set({ selectUser }),
+   setSidebarOpen: (value) => set({ sidebarOpen: value}),
 }))

@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { authStore } from "../store/authStore";
-import { LogOut, MessageCircle, Settings, User } from "lucide-react";
+import { chatStore } from "../store/chatStore";
+import { ArrowLeft, LogOut, MessageCircle, Settings, User } from "lucide-react";
 
 
 const Navbar = () => {
- const {logout, authUser} = authStore()
+ const {logout, authUser} = authStore();
+ const { sidebarOpen, setSidebarOpen} = chatStore()
 
  return ( 
    <nav className=" fixed w-full backdrop-blur-lg bg-base-100 border-b border-base-300 top-0 z-40 bg-base-100/80">
@@ -20,6 +22,14 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-4">
+            {/* back to sidebar */}
+            {!sidebarOpen && (
+             <button
+               className="p-2 bg-base-200 rounded-2xl"
+               onClick={() => setSidebarOpen(true)}>
+              <ArrowLeft className="sm:hidden"/>
+             </button>
+            )}
             <Link to= "/settings" className="p-3 bg-base-200 rounded-2xl">
              <Settings className="size-5 cursor-pointer" />
            </Link> 

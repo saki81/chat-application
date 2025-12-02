@@ -7,10 +7,11 @@ import { authStore } from "../store/authStore";
 
 const SidebarUsers = () => {
 
- const { users, selectUser, isUsersLoading,getUsers,setSelectUser} = chatStore();
+ const { users, selectUser, isUsersLoading,getUsers,setSelectUser, sidebarOpen, setSidebarOpen} = chatStore();
 
  const { onlineUsers, authUser} = authStore();
  const  [showOnlineOnly, setShowOnlineOnly] = useState<boolean>(false) ;
+
 
   useEffect(() => {
    getUsers()
@@ -20,18 +21,17 @@ const SidebarUsers = () => {
     ? users.filter((user) => onlineUsers.includes(user._id))
     : users;
 
- /* const handleOnline = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowOnlineOnly(e.target.checked)
-}*/
 
  if (isUsersLoading) return <SidebarSkeleton/>
 
 
 
  return ( 
-     <aside className="h-full md:w-1/4 sm:w-full lg:w-72 border-r border-base-300 flex flex-col transition-all duration-300">
+    <>
+     <aside className={`h-full w-full sm:w-60 border-r border-base-300  flex-col transition-all duration-300 ${sidebarOpen ? "block" : "hidden"} sm:block`}>
+
       <div className="border-b border-base-300 w-full p-4">
-        <div className="flex items-center  gap-2">
+        <div className="flex items-center gap-2">
            <Users className="w-6 h-6"/>
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
@@ -51,14 +51,18 @@ const SidebarUsers = () => {
          {filteredUsers.filter(u => u._id !== authUser?._id).map((user) => (
            <button
              key={user._id}
-             onClick={()=>setSelectUser(user)}
+             onClick={()=> {
+               setSelectUser(user);
+
+               if (window.innerWidth < 640) setSidebarOpen(false)
+              }}
              className={`
-               w-full p-3 flex items-center gap-3
+               w-full p-3 flex gap-3
                hover:bg-base-300 transition-colors
                ${selectUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
               `}>
             
-              <div className="relative mx-auto lg:mx-0">
+              <div className="relative md:mx-0 sm:mx-auto">
                 <img
                 src={user.profilePic || "/avatar.png"}
                 alt={user.fullName}
@@ -85,10 +89,9 @@ const SidebarUsers = () => {
           <div className="text-center text-zinc-500 py-4">
               No online users
           </div>
-         )}
-       
-       
+         )} 
      </aside>
+    </>
   );
 }
  
