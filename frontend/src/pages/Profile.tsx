@@ -37,7 +37,7 @@ const Profile = () => {
 
  return ( 
      <main className="h-screen pt-28">
-        <div className="max-w-3xl  mx-auto p-14 py-8 ">
+        <div className="max-w-3xl mx-auto p-3 sm:p-14 py-8 ">
           <div className="bg-base-200 rounded-2xl p-6 space-y-8 text-center">
             <h1 className="font-semibold text-3xl letter -tracking-tight ">Profile</h1>
             <p className="mt-3 -tracking-tight">Your information</p>

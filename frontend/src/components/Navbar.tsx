@@ -23,23 +23,31 @@ const Navbar = () => {
           
           <div className="flex items-center gap-4">
             {/* back to sidebar */}
-            {!sidebarOpen && (
+          {!sidebarOpen && ( 
+             
              <button
                className="p-2 bg-base-200 rounded-2xl"
                onClick={() => setSidebarOpen(true)}>
-              <ArrowLeft className="sm:hidden"/>
+              <ArrowLeft 
+                 className="sm:hidden"/>
              </button>
-            )}
-            <Link to= "/settings" className="p-3 bg-base-200 rounded-2xl">
+          )} 
+            <Link to= "/settings" 
+                  className="p-3 bg-base-200 rounded-2xl"
+                  onClick={() => setSidebarOpen(true)}>
              <Settings className="size-5 cursor-pointer" />
            </Link> 
-
+          
+              
            {authUser && (
                <>
-                 <Link to="/profile" className="p-3 bg-base-200 rounded-2xl">
+               
+                 <Link to="/profile" 
+                       className="p-3 bg-base-200 rounded-2xl"
+                       onClick={() => setSidebarOpen(true)}>
                    <User className="size-5 cursor-pointer"/>
                  </Link>
-                
+               
                 <button onClick={logout} className="p-3 bg-base-200 rounded-2xl">
                  <Link to="/login">
                    <LogOut className="size-5 cursor-pointer" />
@@ -47,6 +55,8 @@ const Navbar = () => {
                  </button>
                </>
            )}
+           
+           
           </div>
          
         </div>
