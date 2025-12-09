@@ -11,6 +11,7 @@ import { LoaderPinwheel } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import { themeStore } from "./store/themeStore";
 
+
 function App() {
   const {authUser, checkAuth, isCheckingAuth, onlineUsers } = authStore();
   const { theme} = themeStore();
@@ -19,9 +20,8 @@ function App() {
 
   useEffect(() => {
     checkAuth()
-  },[checkAuth])
-  
-  
+  },[checkAuth]);
+
   console.log({ authUser});
 
   if( isCheckingAuth && !authUser) {

@@ -14,7 +14,10 @@ const ChatBox = () => {
          isMessagesLoading, 
          selectUser,
          subscribeToMessages,
-         unsubscribeMessages } = chatStore();
+         unsubscribeMessages,
+         isUserTyping} = chatStore();
+  
+  const isTyping = selectUser ? isUserTyping(selectUser._id) : false; 
 
   const { authUser } = authStore();
   const messageEndRef = useRef<HTMLDivElement | null>(null)
@@ -23,7 +26,7 @@ const ChatBox = () => {
     
     useEffect(() => {
       if ( selectUser?._id) {
-        //  console.log("Fetching messages for user ID:", selectUser._id); 
+  
          getMessages(selectUser._id );
 
          subscribeToMessages();
@@ -32,6 +35,9 @@ const ChatBox = () => {
       } 
 
     },[selectUser, getMessages,subscribeToMessages, unsubscribeMessages]);
+
+
+
 
     useEffect(() => {
       if (messageEndRef.current && messages) {
@@ -57,6 +63,7 @@ const ChatBox = () => {
               className={`chat ${message.senderId === authUser?._id ? "chat-end" : "chat-start"}`}
               ref={messageEndRef}
              >
+           
               <div className="chat-image avatar">
                 <div className="size-10 rounded-full border">
                    <img 
@@ -67,6 +74,7 @@ const ChatBox = () => {
                      } 
                      alt="profile-pic" />
                 </div>
+               
               </div>
 
               <div className="chat-header mb-1">
@@ -74,7 +82,7 @@ const ChatBox = () => {
                  {message.createdAt && new Date(message.createdAt).toLocaleDateString('en-GB') }
                 </time>
               </div>
-
+             
               <div className="chat-bubble flex flex-col">
                  {message.image && (
                    <img 
@@ -82,10 +90,20 @@ const ChatBox = () => {
                      alt="Attachment"
                      className="sm:max-w-[200px] rounded-md mb-2"/>
                  )}
-                 {message.text && <p>{message.text}</p>}
+                
+                {message.text && <p>{message.text}</p>}  
+  
               </div>
+               { isTyping &&  <div  className="text-gray-400 text-sm pl-14 pb-2 animate-pulse">
+                {selectUser?.fullName || "User"} is typing...
+             </div>}
             </div>
-          ))}
+           
+          ))}  
+
+      
+  
+  { <div ref={messageEndRef} /> }
         </div>
         <MessageInput />
       </div>

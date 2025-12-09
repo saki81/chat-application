@@ -81,11 +81,15 @@ export interface MessageData {
 
 export interface Chat {
    messages: Message[];
+   authUser: User | null;
    users: User[];
    selectUser: User | null;
    sidebarOpen: boolean;
    isUsersLoading: boolean;
    isMessagesLoading: boolean;
+   typingUsers: Record<string, boolean>;
+   typingTimeout: number | null;
+
    getUsers: () => Promise<void>;
    getMessages: (userId: string) => Promise<void>;
    setSelectUser: (data: User | null ) => void;
@@ -93,6 +97,10 @@ export interface Chat {
    sendMessage: (messageData: MessageData ) => Promise<void>;
    subscribeToMessages: () => void;
    unsubscribeMessages: () => void;
+   isUserTyping: (userId: string) => boolean;
+   startTyping: () => void;
+   stopTyping: () => void;
+
 }
 
 

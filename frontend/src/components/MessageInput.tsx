@@ -3,12 +3,16 @@ import { chatStore } from "../store/chatStore";
 import { X, Image, Send} from "lucide-react";
 import toast from "react-hot-toast";
 
+
 const MessageInput = () => {
 
   const [ text,setText ] = useState("");
   const [ imagePreview , setImagePreview ] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { sendMessage } = chatStore();
+  
+
+  const { sendMessage, startTyping, stopTyping } = chatStore();
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -16,6 +20,8 @@ const MessageInput = () => {
       toast.error("Please select an image file");
       return;
     }
+
+   
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -29,8 +35,24 @@ const MessageInput = () => {
       if(fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const handleTyping = ( e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setText(value);
+      
+    if(value.length > 0) {
+       
+      startTyping();
+    }
+    else {
+      stopTyping();
+    }
+  };
+
+
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!text.trim() && !imagePreview) return;
 
     try {
@@ -40,8 +62,8 @@ const MessageInput = () => {
         image: imagePreview || "",
       });
 
-      // Clear form
       setText("");
+      
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
@@ -81,7 +103,7 @@ const MessageInput = () => {
             className="w-full input input-bordered rounded-3xl input-sm sm:input-md"
             placeholder="Type a message..."
             value={text}
-            onChange={(e) => setText(e.target.value)}/>
+            onChange={handleTyping}/>
           <input 
             type="file" 
             accept="image/*"
