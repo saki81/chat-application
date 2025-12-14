@@ -4,6 +4,7 @@ import MessageSkeleton from "./skeletons-loading/MessageSkeleton";
 import { chatStore} from "../store/chatStore";
 import { authStore } from "../store/authStore";
 import { useEffect, useRef} from "react";
+import { Ellipsis } from 'lucide-react';
 
 
 const ChatBox = () => {
@@ -16,8 +17,10 @@ const ChatBox = () => {
          subscribeToMessages,
          unsubscribeMessages,
          isUserTyping} = chatStore();
+
+  if (!selectUser) return null;
   
-  const isTyping = selectUser ? isUserTyping(selectUser._id) : false; 
+  const isTyping =  isUserTyping(selectUser?._id); 
 
   const { authUser } = authStore();
   const messageEndRef = useRef<HTMLDivElement | null>(null)
@@ -40,10 +43,10 @@ const ChatBox = () => {
 
 
     useEffect(() => {
-      if (messageEndRef.current && messages) {
+      if (messageEndRef.current && messages ) {
         messageEndRef.current.scrollIntoView({ behavior: "smooth"})
       }
-    }, [messages])
+    }, [messages, isTyping])
 
 
  if(isMessagesLoading) 
@@ -60,23 +63,26 @@ const ChatBox = () => {
           {messages.map((message) => (
             <div
               key={message._id}
-              className={`chat ${message.senderId === authUser?._id ? "chat-end" : "chat-start"}`}
+              className={`chat ${ message.senderId === authUser?._id  ? "chat-end" : "chat-start"}`}
               ref={messageEndRef}
              >
            
-              <div className="chat-image avatar">
-                <div className="size-10 rounded-full border">
-                   <img 
-                     src={
-                      message.senderId === authUser?._id
-                        ? authUser.profilePic || "/avatar.png"
-                        : selectUser?.profilePic || "/avatar.png"
-                     } 
-                     alt="profile-pic" />
-                </div>
-               
-              </div>
-
+                       <div className="text-gray-400 text-sm flex">
+                        <div className="chat-image avatar">
+                         <div className="size-10 rounded-full border">
+                          <img 
+                           src={
+                           message.senderId === authUser?._id
+                         ? authUser.profilePic || "/avatar.png"
+                         : selectUser?.profilePic || "/avatar.png"
+                       } 
+                         alt="profile-pic" />
+                     </div>
+                  </div>
+                   
+                </div> 
+              
+              
               <div className="chat-header mb-1">
                 <time className="text-xs opacity-50 ml-1">
                  {message.createdAt && new Date(message.createdAt).toLocaleDateString('en-GB') }
@@ -93,17 +99,13 @@ const ChatBox = () => {
                 
                 {message.text && <p>{message.text}</p>}  
   
-              </div>
-               { isTyping &&  <div  className="text-gray-400 text-sm pl-14 pb-2 animate-pulse">
-                {selectUser?.fullName || "User"} is typing...
-             </div>}
-            </div>
-           
-          ))}  
+             </div>
+            </div>      
+         ))}  
 
-      
-  
-  { <div ref={messageEndRef} /> }
+      <div className= "text-gray-400  text-sm "> 
+                  { isTyping && (<Ellipsis className=" size-10 animate-pulse space-y-4 forced-color-adjust-auto"/>)} <div/>               
+            </div> 
         </div>
         <MessageInput />
       </div>
