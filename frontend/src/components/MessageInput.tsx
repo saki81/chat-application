@@ -8,7 +8,9 @@ const MessageInput = () => {
 
   const [ text,setText ] = useState("");
   const [ imagePreview , setImagePreview ] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   
 
   const { sendMessage, startTyping, stopTyping } = chatStore();
@@ -35,10 +37,17 @@ const MessageInput = () => {
       if(fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleTyping = ( e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTyping = ( e: React.ChangeEvent<HTMLTextAreaElement>) =>  {
     const value = e.target.value;
 
     setText(value);
+
+    // Auto-resize text area to max-height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      const newHeight = Math.min(textareaRef.current.scrollHeight, 120);
+      textareaRef.current.style.height = newHeight + "px";
+    }
       
     if(value.length > 0) {
        
@@ -66,11 +75,23 @@ const MessageInput = () => {
       
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
+
+      // Reset textarea height
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+      }
     } catch (error) {
        console.error("Failed to send message:", error);
     }
   }
-
+ 
+  // Handle Enter key - send message, Shift+Enter - new line
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+     if (e.key === "Enter" && !e.shiftKey) {
+       e.preventDefault();
+       handleSendMessage(e as any);
+     }
+  }
 
 
  return ( 
@@ -98,12 +119,20 @@ const MessageInput = () => {
 
        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
           <div className="flex-1 flex gap-2">
-          <input 
-            type="text" 
-            className="w-full input input-bordered rounded-3xl input-sm sm:input-md"
+          <textarea
+            ref={textareaRef} 
+            className="w-full input input-bordered rounded-3xl input-sm sm:input-md
+                       resize-none overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 
+                       scrollbar-track-transparent"
             placeholder="Type a message..."
             value={text}
-            onChange={handleTyping}/>
+            onChange={handleTyping}
+            onKeyDown={handleKeyDown}
+            rows={1}
+            style={{
+              minHeight: "2.5rem",
+              maxHeight: "7.5rem",
+            }}/>
           <input 
             type="file" 
             accept="image/*"

@@ -97,7 +97,10 @@ const ChatBox = () => {
                      className="sm:max-w-[200px] rounded-md mb-2"/>
                  )}
                 
-                {message.text && <p>{message.text}</p>}  
+                {message.text && 
+                   <p className="break-words whitespace-pre-wrap max-w-[240px]">
+                       {message.text}
+                   </p>}  
   
              </div>
             </div>      
