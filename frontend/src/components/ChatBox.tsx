@@ -98,7 +98,7 @@ const ChatBox = () => {
                  )}
                 
                 {message.text && 
-                   <p className="break-words whitespace-pre-wrap max-w-[240px]">
+                   <p className="break-words whitespace-pre-wrap max-w-[225px]">
                        {message.text}
                    </p>}  
   
